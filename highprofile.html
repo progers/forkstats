@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html>
+<script src="d3.js" charset="utf-8"></script>
+<script src="linesOfCode.js"></script>
+<script src="commitsByDay.js"></script>
+<script src="commitsByOrganization.js"></script>
+<ascript src="averageCommitsByDay.js"></script>
+<script src="topFiles.js"></script>
+<style>
+  body {
+    font: 10px sans-serif;
+  }
+  .axis path, .axis line {
+    fill: none;
+    stroke: #000;
+  }
+  .x.axis path {
+    fill: none;
+    stroke: #000;
+  }
+  .line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+  }
+  .forkline {
+    stroke: steelblue;
+    stroke-width: 1px;
+    stroke-dasharray: 3 3;
+    stroke-opacity: 0.2;
+  }
+  .arc path {
+    stroke: #fff;
+  }
+  #commitsByDay {
+    border: 1px solid #000;
+  }
+</style>
+<body>
+Highprofile!<br/><br/>
+<div id="linesOfCode"></div>
+<div id="commitsByDay"></div>
+<div id="commitsByOrganization"></div>
+<div id="averageCommitsByDay"></div>
+<div id="averageCommitsByDayByOrganization"></div>
+<div id="topFiles"></div>
+</body>
+</html>

@@ -54,12 +54,12 @@ function showLinesOfCode() {
     .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  d3.csv("blinkLinesOfCode.csv", function(error, data) {
+  d3.csv("data/blinkLinesOfCode.csv", function(error, data) {
     blinkData = cleanupLanguages(data);
     updateLinesOfCode();
   });
 
-  d3.csv("webkitLinesOfCode.csv", function(error, data) {
+  d3.csv("data/webkitLinesOfCode.csv", function(error, data) {
     webkitData = cleanupLanguages(data);
     updateLinesOfCode();
   });

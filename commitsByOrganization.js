@@ -3,11 +3,11 @@ function showCommitsByOrganization() {
   var webkitData = undefined;
   var organizations = [];
 
-  d3.csv("blinkCommitsByOrganization.csv", function(error, data) {
+  d3.csv("data/blinkCommitsByOrganization.csv", function(error, data) {
     blinkData = data;
     updateCommitsByOrganization();
   });
-  d3.csv("webkitCommitsByOrganization.csv", function(error, data) {
+  d3.csv("data/webkitCommitsByOrganization.csv", function(error, data) {
     webkitData = data;
     updateCommitsByOrganization();
   });

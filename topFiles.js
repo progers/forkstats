@@ -1,8 +1,8 @@
 function showTopFiles() {
-  d3.csv("blinkTopFiles.csv", function(error, data) {
+  d3.csv("data/blinkTopFiles.csv", function(error, data) {
     showData(data, "Blink");
   });
-  d3.csv("webkitTopFiles.csv", function(error, data) {
+  d3.csv("data/webkitTopFiles.csv", function(error, data) {
     showData(data, "Webkit");
   });
 

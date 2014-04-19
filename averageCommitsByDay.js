@@ -36,7 +36,7 @@ function showAverageCommitsByDay() {
     .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  d3.csv("averageCommitsByDay.csv", function(error, data) {
+  d3.csv("data/averageCommitsByDay.csv", function(error, data) {
     color.domain(d3.keys(data[0]).filter(function(key) { return key !== "date"; }));
 
     data.forEach(function(d) {
@@ -109,7 +109,7 @@ function showAverageCommitsByDayByOrganization() {
     .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  d3.csv("averageCommitsByDayByOrganization.csv", function(error, data) {
+  d3.csv("data/averageCommitsByDayByOrganization.csv", function(error, data) {
     color.domain(d3.keys(data[0]).filter(function(key) { return key !== "date"; }));
 
     data.forEach(function(d) {

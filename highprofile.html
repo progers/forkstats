@@ -1,10 +1,10 @@
 <!DOCTYPE HTML>
 <html>
-<script src="d3.js" charset="utf-8"></script>
+<script src="d3.js"></script>
 <script src="linesOfCode.js"></script>
 <script src="commitsByDay.js"></script>
 <script src="commitsByOrganization.js"></script>
-<script src="averageCommitsByDay.js"></script>
+<ascript src="averageCommitsByDay.js"></script>
 <script src="topFiles.js"></script>
 <style>
   body {
@@ -34,6 +34,22 @@
   }
   #commitsByDay {
     border: 1px solid #000;
+  }
+  .topFilesNode {
+    border: solid 1px white;
+    font: 10px sans-serif;
+    line-height: 12px;
+    overflow: hidden;
+    position: absolute;
+    text-indent: 2px;
+  }
+  #topFiles div {
+    float: left;
+  }
+  .topFilesTitle {
+    overflow: hidden;
+    position: absolute;
+    text-align: right;
   }
 </style>
 <body>

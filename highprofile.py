@@ -273,19 +273,21 @@ def writeLinesOfCode(repoDir, repo, samples, startDatetime, cloc, outputFilename
 def writeTopFiles(repo, startDatetime, topFileCount, outputFilename, extensionFilter):
     commits = getCommitsSince(repo, startDatetime, "Source/")
     changeCounter = Counter()
+    filenamesToPaths = {} # store just the last path for each filename.
     for commit in commits:
         files = commit.stats.files
         #fixme: this will double-count moves.
-        for file in files:
-            filename = os.path.basename(file)
+        for path in files:
+            filename = os.path.basename(path)
             extension = os.path.splitext(filename)[1]
             if (extension in extensionFilter):
                 changeCounter[filename] += 1
+                filenamesToPaths[filename] = os.path.dirname(path)
     topFilesFile = open(outputFilename, "w")
-    topFilesFile.write("file,count\n")
+    topFilesFile.write("path,file,count\n")
     topFiles = changeCounter.most_common(topFileCount)
     for top in topFiles:
-        topFilesFile.write(top[0] + "," + str(top[1]) + "\n")
+        topFilesFile.write(filenamesToPaths[top[0]] + "," + top[0] + "," + str(top[1]) + "\n")
 
 
 def main():
@@ -334,10 +336,10 @@ def main():
     #print "  done!"
 
     print "Computing top files..."
-    topFileCount = 200
+    topFileCount = 500
     topFileExtensionFilter = [".h", ".cpp", ".c", ".idl", ".mm"]
-    #writeTopFiles(blinkRepo, datetime.datetime(2014,1,1), topFileCount, outputDir + "blinkTopFiles.csv", topFileExtensionFilter)
-    #writeTopFiles(webkitRepo, datetime.datetime(2014,1,1), topFileCount, outputDir + "webkitTopFiles.csv", topFileExtensionFilter)
+    #writeTopFiles(blinkRepo, datetime.datetime(2013,6,1), topFileCount, outputDir + "blinkTopFiles.csv", topFileExtensionFilter)
+    writeTopFiles(webkitRepo, datetime.datetime(2014,1,1), topFileCount, outputDir + "webkitTopFiles.csv", topFileExtensionFilter)
     print "  done!"
 
 if __name__ == '__main__':

@@ -1,15 +1,55 @@
 <!DOCTYPE HTML>
 <html>
-<script src="d3.js"></script>
+<script src="d3.js" charset="utf-8"></script>
 <script src="linesOfCode.js"></script>
 <script src="commitsByDay.js"></script>
 <script src="commitsByOrganization.js"></script>
-<ascript src="averageCommitsByDay.js"></script>
+<ascript src="averageCommitsByDay.js"></ascript>
 <script src="topFiles.js"></script>
 <style>
   body {
-    font: 10px sans-serif;
+    font-family: "Open Sans",Calibri,Candara,Arial,sans-serif;
+    font-size: 15px;
+    max-width: 860px;
+    background: #fff;
+    color: #333;
+    margin-right: auto;
+    margin-left: auto;
+    padding-right: 15px;
+    padding-left: 15px;
   }
+  h1, h2, h3 {
+    font-weight: 300;
+  }
+  h2, h3 {
+    margin-top: 2em;
+    margin-bottom: -0.5em;
+  }
+  .box {
+    background: #fff;
+    border-color: #888;
+  }
+  .timeline {
+    width: 300px;
+    border: 1px solid;
+    padding: 5px;
+    float: right;
+    margin: 5px;
+    margin-right: -75px;
+  }
+  .timeline table tr td {
+    vertical-align: top;
+    padding: 5px;
+  }
+  .timeline .leftcolumn {
+    text-align: right;
+  }
+  .graph {
+    font-size: 10px;
+    margin-right: -75px;
+    margin-left: -75px;
+  }
+
   .axis path, .axis line {
     fill: none;
     stroke: #000;
@@ -29,11 +69,7 @@
     stroke-dasharray: 3 3;
     stroke-opacity: 0.2;
   }
-  .arc path {
-    stroke: #fff;
-  }
   #commitsByDay {
-    border: 1px solid #000;
   }
   .topFilesNode {
     border: solid 1px white;
@@ -53,12 +89,48 @@
   }
 </style>
 <body>
+<h1>A high-profile fork: one year of Blink and Webkit</h1>
+<div class="box timeline">
+  <table>
+    <tr><td class="leftcolumn">1998/11/4</td><td>KHTML born</td></tr>
+    <tr><td class="leftcolumn">2003/1/7</td><td>Webkit forks KHTML (<a href="http://lists.kde.org/?m=104197092318639">kfm-devel post</a>)</td></tr>
+    <tr><td class="leftcolumn">2013/2/13</td><td>Opera switches to Chromium (<a href="https://web.archive.org/web/20140221033629/http://my.opera.com/haavard/blog/2013/02/13/webkit">post</a>)</td></tr>
+    <tr><td class="leftcolumn">2013/4/3</td><td>Blink forks WebKit (<a href="http://blog.chromium.org/2013/04/blink-rendering-engine-for-chromium.html">post</a>)</td></tr>
+    <tr><td class="leftcolumn">2013/5/21</td><td>Tech reporting is terrible v1 (<a href="http://news.softpedia.com/news/For-Chrome-s-Blink-Google-Has-Already-Removed-8-8-Million-Lines-of-WebKit-Code-354831.shtml">8.8M LOC</a>)</td></tr>
+    <tr><td class="leftcolumn">2013/5/22</td><td>Tech reporting is terrible v2 (<a href="http://news.softpedia.com/news/WebKit-Removes-8-8-Million-of-Code-After-Google-s-Departure-355192.shtml">8.8M LOC</a>)</td></tr>
+    <tr><td class="leftcolumn">2013/9/12</td><td>QT switches from WebKit to Blink (<a href="https://lists.webkit.org/pipermail/webkit-dev/2013-September/025449.html">webkit-dev</a>)</td></tr>
+    <tr><td class="leftcolumn">2014/1/23</td><td>CSS Regions dropped from Blink (<a href="https://groups.google.com/a/chromium.org/d/msg/blink-dev/kTktlHPJn4Q/YrnfLxeMO7IJ">post</a>)</td></tr>
+  </table>
+</div>
+
+<p>In 2013 the <a href="http://en.wikipedia.org/wiki/Browser_wars">browser wars</a> sprouted a new rendering engine when Blink forked from Webkit. At the time of the fork, Webkit had 1.8 million lines of C++, <a href="https://www.ohloh.net/p/WebKit">2,500</a> commits per month and was the most popular engine. On mobile, Webkit backed the top 3 browsers (Apple Safari, Google Chrome, Android Browser), accounting for over 75% of mobile browsers. This post is a look at the Blink/Webkit fork one year later: how have the projects diverged, who is driving them, and where are they headed?</p>
+
+<h2>What is a browser engine?</h2>
+<p>Browser engines load, layout, and display webpages. The Webkit project includes more than just a browser engine: it also contains two application layers (Webkit1 and the multiprocess Webkit2), a Javascript engine (JavascriptCore), 30,000 tests, etc. At the time of the fork there were 6 distinct build systems. For Blink, both the application layer (Chromium) and javascript engine (V8) live in separate repositories. In this analysis, "Source/" is the C++ code of the WebKit project (including JavascriptCore and Webkit2) and "core" is just the common code shared by Blink and Webkit such as Source/WebCore and Source/WTF. All code behind the data here is open source.
+</p>
+
+<h2>Divergence</h2>
+<p>ljlksjdf</p>
+
+
+<i>Intro, History of the fork, and timeline</i><br>
+
+<i>Divergence</i><br>
+<i>  codesize (8.8M lol)</i><br>
+<i>  commit counts</i><br>
+<i>  the players</i><br>
+<i>  project focus - goals stated at blinkon, eseidel's post, oilpan, jsc bindings, regions debacle</i><br>
+<i>The future</i><br>
+
+dsfdsfds
+f
+dsfds
 Highprofile!<br/><br/>
-<div id="linesOfCode"></div>
-<div id="commitsByDay"></div>
-<div id="commitsByOrganization"></div>
-<div id="averageCommitsByDay"></div>
-<div id="averageCommitsByDayByOrganization"></div>
-<div id="topFiles"></div>
+<div id="linesOfCode" class="graph"></div>
+<div id="commitsByDay" class="graph"></div>
+<div id="commitsByOrganization" class="graph"></div>
+<div id="averageCommitsByDay" class="graph"></div>
+<div id="averageCommitsByDayByOrganization" class="graph"></div>
+<div id="topFiles" class="graph"></div>
 </body>
 </html>

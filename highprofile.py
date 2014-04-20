@@ -270,8 +270,8 @@ def writeLinesOfCode(repoDir, repo, samples, startDatetime, cloc, outputFilename
     git.checkout("master")
 
 
-def writeTopFiles(repo, startDatetime, topFileCount, outputFilename, extensionFilter):
-    commits = getCommitsSince(repo, startDatetime, "Source/")
+def writeTopFiles(repo, startDatetime, topFileCount, outputFilename, extensionFilter, sourceCorePathFilter):
+    commits = getCommitsSince(repo, startDatetime, sourceCorePathFilter)
     changeCounter = Counter()
     filenamesToPaths = {} # store just the last path for each filename.
     for commit in commits:
@@ -306,7 +306,7 @@ def main():
     # comparable across the projects (e.g., Source/WebKit and Source/WebKit2 don't exist in Blink).
     sourceCorePathFilter = ["Source/wtf", "Source/WTF", "Source/platform", "Source/Platform"
                            ,"Source/modules", "Source/heap", "Source/core", "Source/bindings"
-                           ,"Source/WebCore", "Source/WebKit", "Source/WebKit2", "Source/bmalloc"]
+                           ,"Source/WebCore", "Source/bmalloc"] # "Source/WebKit", "Source/WebKit2",
 
 
     print "Computing commits by day..."
@@ -338,8 +338,8 @@ def main():
     print "Computing top files..."
     topFileCount = 500
     topFileExtensionFilter = [".h", ".cpp", ".c", ".idl", ".mm"]
-    #writeTopFiles(blinkRepo, datetime.datetime(2013,6,1), topFileCount, outputDir + "blinkTopFiles.csv", topFileExtensionFilter)
-    writeTopFiles(webkitRepo, datetime.datetime(2014,1,1), topFileCount, outputDir + "webkitTopFiles.csv", topFileExtensionFilter)
+    writeTopFiles(blinkRepo, forkDatetime, topFileCount, outputDir + "blinkTopFiles.csv", topFileExtensionFilter, sourceCorePathFilter)
+    writeTopFiles(webkitRepo, forkDatetime, topFileCount, outputDir + "webkitTopFiles.csv", topFileExtensionFilter, sourceCorePathFilter)
     print "  done!"
 
 if __name__ == '__main__':

@@ -92,7 +92,7 @@ function showCommitsByOrganization() {
         .attr("y", 6)
         .attr("dy", ".71em")
         .style("text-anchor", "end")
-        .text("Commits since fork");
+        .text("Core commits since fork");
 
     var organization = svg.selectAll(".organization")
         .data(data)

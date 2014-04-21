@@ -49,6 +49,9 @@
     margin-right: -75px;
     margin-left: -75px;
   }
+  #topFiles {
+    margin-left: 0px;
+  }
 
   .axis path, .axis line {
     fill: none;
@@ -103,34 +106,42 @@
   </table>
 </div>
 
-<p>In 2013 the <a href="http://en.wikipedia.org/wiki/Browser_wars">browser wars</a> sprouted a new rendering engine when Blink forked from Webkit. At the time of the fork, Webkit had 1.8 million lines of C++, <a href="https://www.ohloh.net/p/WebKit">2,500</a> commits per month and was the most popular engine. On mobile, Webkit backed the top 3 browsers (Apple Safari, Google Chrome, Android Browser), accounting for over 75% of mobile browsers. This post is a look at the Blink/Webkit fork one year later: how have the projects diverged, who is driving them, and where are they headed?</p>
+<p>In 2013 the <a href="http://en.wikipedia.org/wiki/Browser_wars">browser wars</a> sprouted a new rendering engine: Blink. When Blink forked in April 2013, Webkit had 1.8 million lines of C++, <a href="https://www.ohloh.net/p/WebKit">2,500</a> commits per month and was the most popular browser engine. On mobile, Webkit backed the top 3 browsers (Apple Safari, Google Chrome, Android Browser), accounting for over 75% of mobile browsers. This post is a look at the Blink/Webkit fork one year later: how have the projects diverged, who is driving them, and where are they headed?</p>
 
 <h2>What is a browser engine?</h2>
-<p>Browser engines load, layout, and display webpages. The Webkit project includes more than just a browser engine: it also contains two application layers (Webkit1 and the multiprocess Webkit2), a Javascript engine (JavascriptCore), 30,000 tests, etc. At the time of the fork there were 6 distinct build systems. For Blink, both the application layer (Chromium) and javascript engine (V8) live in separate repositories. In this analysis, "Source/" is the C++ code of the WebKit project (including JavascriptCore and Webkit2) and "core" is just the common code shared by Blink and Webkit such as Source/WebCore and Source/WTF. All code behind the data here is open source.
-</p>
+<p>A discussion of Blink and Webkit has to define exactly which parts are the core engine. For example, Webkit contains a first-class javascript engine (JSC) and two application layers (Webkit1 and the multiprocess Webkit2), neither of which are in Blink. In this discussion, "Source/" is the C++ code of the Webkit project (including JSC, etc.) and "core" is just the common code shared by Blink and Webkit such as Source/WebCore and Source/WTF.</p>
+<p>In part due to not understanding the subtle differences between the projects, the ever-lazy tech media reported Blink removed <a href="http://www.engadget.com/2013/05/16/google-blink-team-pulls-8-8-million-lines-of-webkit-code/">8.8 million lines of code</a>. One wonders how Blink manages to run on -7 million lines of code! "git diff --stat" shows that over 8.8 million lines were actually deleted in Blink, primarily layout tests. Looking at the core code shared by both engines, Blink has 207,000 fewer lines of actual code (out of a total of 677,000 for Blink and 883,000 for Webkit. The tech media later didn't get <a href="http://trac.webkit.org/changeset/164131">a joke</a> by Andreas Kling and reported Webkit also <a href="http://news.softpedia.com/news/WebKit-Removes-8-8-Million-of-Code-After-Google-s-Departure-355192.shtml">removed 8.8 million lines</a> of ShadowDOM.</p>
 
 <h2>Divergence</h2>
-<p>ljlksjdf</p>
-
-
-<i>Intro, History of the fork, and timeline</i><br>
-
-<i>Divergence</i><br>
-<i>  codesize (8.8M lol)</i><br>
-<i>  commit counts</i><br>
-<i>  the players</i><br>
-<i>  project focus - goals stated at blinkon, eseidel's post, oilpan, jsc bindings, regions debacle</i><br>
-<i>The future</i><br>
-
-dsfdsfds
-f
-dsfds
-Highprofile!<br/><br/>
-<div id="linesOfCode" class="graph"></div>
+<p>The projects are quickly diverging due to differences in both resources and priorities. In terms of resources, Blink simply has a higher commit rate and, while commit rate is not necessarily a measure of progress, it is a rough proxy. The graph below shows the differences in commit rate over time.</p>
 <div id="commitsByDay" class="graph"></div>
+<p>
+This is not unexpected since Google was the <a href="http://blog.bitergia.com/2013/02/06/report-on-the-activity-of-companies-in-the-webkit-project/">top contributor</a> to Webkit. In terms of core commit count, Blink has 6,000 commits more than Webkit, nearly as many commits Webkit has since the fork (8,700). While not directly comparable (see: What is a browser engine), Mozilla-central had nearly 50,000 commits in the same timeframe. The graph below shows the other major organizations contributing.
+</p>
 <div id="commitsByOrganization" class="graph"></div>
+<p>
+Samsung is the second-highest contributor to both projects although twice as many patches land in Blink. Opera and Igalia are the third largest contributors, solely to Blink and Webkit, respectively.
+</p>
+
+<h2>Priorities and revealed preferences</h2>
+<p>
+Blink has explicitly outlined goals in Eric Seidel's <a href="https://groups.google.com/a/chromium.org/d/topic/blink-dev/Z5OzwYh3Wfk/discussion">2014 brainstorming</a> post. A core theme is clearly mobile-focused performance. Webkit doesn't have stated goals but we can tease out each project's goals by looking at the top-modified files.
+</p>
+<div id="topFiles" class="graph"></div>
+<p>
+First, the resources difference is clear: both project's top-changed file is Document.cpp but Blink has 2.5x the number of changes. Blink has a strong focus on UseCounter metrics (which backs the <a href="http://www.chromestatus.com/metrics/feature/popularity">usage statistics</a>). Canvas and EvenHandler are also relatively popular in Blink. Webkit has a strong focus on text layout with top changes in RenderBlockLineLayout and RenderBlockFlow. Additionally, CSSParser, AccessibilityRenderObject, and Editing are all relatively popular in Webkit.
+</p>
+
+<h2>The future</h2>
+<p>
+TODO: write me
+</p>
+<div id="commitsByDay" class="graph"></div>
+<div id="linesOfCode" class="graph"></div>
+
+
 <div id="averageCommitsByDay" class="graph"></div>
 <div id="averageCommitsByDayByOrganization" class="graph"></div>
-<div id="topFiles" class="graph"></div>
+
 </body>
 </html>

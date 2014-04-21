@@ -9,7 +9,7 @@ function showTopFiles() {
   function createHierarchy(data) {
     hierarchy = {name: "root"};
     for (dat in data) {
-      if (dat > 25) break;
+      if (dat > 35) break;
       var path = data[dat].path;
       var file = data[dat].file;
       var count = data[dat].count;
@@ -43,8 +43,8 @@ function showTopFiles() {
   function showData(data, repo) {
     root = createHierarchy(data);
 
-    var margin = {top: 10, right: 10, bottom: 10, left: 10},
-        width = 400 - margin.left - margin.right,
+    var margin = {top: 0, right: 10, bottom: 25, left: 10},
+        width = 435 - margin.left - margin.right,
         height = 300 - margin.top - margin.bottom;
 
     var color = d3.scale.category20c();
@@ -58,8 +58,12 @@ function showTopFiles() {
         .style("position", "relative")
         .style("width", (width + margin.left + margin.right) + "px")
         .style("height", (height + margin.top + margin.bottom) + "px")
-        .style("left", margin.left + "px")
         .style("top", margin.top + "px");
+    if (repo == "Webkit")
+      div.style("left", margin.left + "px");
+    else
+      div.style("right", margin.right + "px");
+    d3.select("#topFiles").style("height", height + "px");
 
     var node = div.datum(root).selectAll(".node")
         .data(treemap.nodes)
@@ -67,7 +71,7 @@ function showTopFiles() {
         .attr("class", "topFilesNode")
         .call(position)
         .style("background", function(d) { return d.children ? color(d.name) : null; })
-        .text(function(d) { return d.children ? null : d.name; })
+        .text(function(d) { return d.children ? null : d.name + " (" + d.size + ")"; })
         .attr("title", function(d) { return d.children ? null : d.name; });
 
     div.append("div")
@@ -75,7 +79,7 @@ function showTopFiles() {
         .style("left", 0 + "px")
         .style("width", width + "px")
         .style("top", height + "px")
-        .text("Top changed files for " + repo);
+        .text("Top core files changed since fork in " + repo + " (change count in parenthesis)");
   }
 
   function position() {

@@ -25,23 +25,31 @@ def getCommitsSince(repo, startDatetime, pathFilter=""):
         commitsSinceStartDatetime.append(commit)
     return commitsSinceStartDatetime
 
-def getCommitsByDay(repo, startDatetime, pathFilter="", organizationFilter=None):
+
+def getCommitsByDayOrMonth(repo, startDatetime, pathFilter="", byDay=True, organizationFilter=None):
+    if (not byDay):
+        startDatetime = datetime.datetime(startDatetime.year, startDatetime.month, 1)
     commitsSince = getCommitsSince(repo, startDatetime, pathFilter)
-    commitsByDay = defaultdict(list)
+    commits = defaultdict(list)
     for commit in commitsSince:
         if (organizationFilter and not organizationFilter == getOrganizationFromCommit(commit)):
             continue
         commitDatetime = datetime.datetime.utcfromtimestamp(commit.committed_date)
-        day = (commitDatetime - startDatetime).days
-        commitsByDay[day].append(commit)
-    return commitsByDay
+        if (byDay):
+            day = (commitDatetime - startDatetime).days
+            commits[day].append(commit)
+        else:
+            month = commitDatetime.month + (12 * (commitDatetime.year - startDatetime.year))
+            commits[month].append(commit)
+    return commits
+
 
 def writeCommitsByDay(blinkRepo, webkitRepo, startDatetime, outputFilename, sourceCorePathFilter):
-    blinkCommitsByDay = getCommitsByDay(blinkRepo, startDatetime)
-    blinkSourceCoreCommitsByDay = getCommitsByDay(blinkRepo, startDatetime, sourceCorePathFilter)
-    webkitCommitsByDay = getCommitsByDay(webkitRepo, startDatetime)
-    webkitSourceCoreCommitsByDay = getCommitsByDay(webkitRepo, startDatetime, sourceCorePathFilter)
-    dateRange = range((datetime.datetime.now() - startDatetime).days + 1)
+    blinkCommitsByDay = getCommitsByDayOrMonth(blinkRepo, startDatetime)
+    blinkSourceCoreCommitsByDay = getCommitsByDayOrMonth(blinkRepo, startDatetime, sourceCorePathFilter)
+    webkitCommitsByDay = getCommitsByDayOrMonth(webkitRepo, startDatetime)
+    webkitSourceCoreCommitsByDay = getCommitsByDayOrMonth(webkitRepo, startDatetime, sourceCorePathFilter)
+    dateRange = list(set(iter(blinkCommitsByDay)) | set(iter(webkitCommitsByDay)))
     commitsByDayFile = open(outputFilename, "w")
     commitsByDayFile.write("date,Blink,Webkit,Blink(core),Webkit(core)\n")
     blinkTotal = 0
@@ -57,13 +65,33 @@ def writeCommitsByDay(blinkRepo, webkitRepo, startDatetime, outputFilename, sour
         commitsByDayFile.write(date + "," + str(blinkTotal) + "," + str(webkitTotal) + ","
             + str(blinkSourceCoreTotal) + "," + str(webkitSourceCoreTotal) + "\n")
 
+
+def writeCommitsByMonthAppleGoogle(blinkRepo, webkitRepo, startDatetime, outputFilename, sourceCorePathFilter):
+    # FIXME: Undercounts Google's commits to webkit post-fork.
+    googleCommitsByMonth = getCommitsByDayOrMonth(blinkRepo, startDatetime, sourceCorePathFilter, False, "Google")
+    appleCommitsByMonth = getCommitsByDayOrMonth(webkitRepo, startDatetime, sourceCorePathFilter, False, "Apple")
+    monthRange = list(set(iter(googleCommitsByMonth)) | set(iter(appleCommitsByMonth)))
+    # remove the last month so we don't show partial data
+    monthRange.pop()
+    commitsByMonthFile = open(outputFilename, "w")
+    commitsByMonthFile.write("date,Google,Apple\n")
+
+    for month in monthRange:
+        googleCommitCount = len(googleCommitsByMonth[month])
+        appleCommitCount = len(appleCommitsByMonth[month])
+
+        commitDatetime = datetime.datetime.utcfromtimestamp(googleCommitsByMonth[month][0].committed_date)
+        date = commitDatetime.strftime("%Y%m") + "01"
+        commitsByMonthFile.write(date + "," + str(googleCommitCount) + "," + str(appleCommitCount) + "\n")
+
+
 def writeCommitsMovingAverage(blinkRepo, webkitRepo, startDatetime, window, outputFilename, sourceCorePathFilter):
     startDatetime = startDatetime - datetime.timedelta(days=(2 * window - 1))
-    blinkCommitsByDay = getCommitsByDay(blinkRepo, startDatetime, sourceCorePathFilter)
-    webkitCommitsByDay = getCommitsByDay(webkitRepo, startDatetime, sourceCorePathFilter)
+    blinkCommitsByDay = getCommitsByDayOrMonth(blinkRepo, startDatetime, sourceCorePathFilter)
+    webkitCommitsByDay = getCommitsByDayOrMonth(webkitRepo, startDatetime, sourceCorePathFilter)
     commitsMovingAverageFile = open(outputFilename, "w")
     commitsMovingAverageFile.write("date,Blink(core),Webkit(core)\n")
-    dateRange = range((datetime.datetime.now() - startDatetime).days + 1)
+    dateRange = list(set(iter(blinkCommitsByDay)) | set(iter(webkitCommitsByDay)))
     for day in dateRange:
         if (day - 2 * window + 1 < 0): continue
         date = (startDatetime + datetime.timedelta(day)).strftime("%Y%m%d")
@@ -85,8 +113,8 @@ def writeCommitsMovingAverageByOrganization(blinkRepo, webkitRepo, startDatetime
     for i in range(0, len(organizations)):
         organization = organizations[i]
         commitsMovingAverageFile.write(",Blink(core) - " + organization + ",Webkit(core) - " + organization)
-        organizationBlinkCommitsByDay[i] = getCommitsByDay(blinkRepo, startDatetime, sourceCorePathFilter, organization)
-        organizationWebkitCommitsByDay[i] = getCommitsByDay(webkitRepo, startDatetime, sourceCorePathFilter, organization)
+        organizationBlinkCommitsByDay[i] = getCommitsByDayOrMonth(blinkRepo, startDatetime, sourceCorePathFilter, True, organization)
+        organizationWebkitCommitsByDay[i] = getCommitsByDayOrMonth(webkitRepo, startDatetime, sourceCorePathFilter, True, organization)
     commitsMovingAverageFile.write("\n")
     dateRange = range((datetime.datetime.now() - startDatetime).days + 1)
     for day in dateRange:
@@ -238,7 +266,7 @@ def writeLinesOfCode(repoDir, repo, samples, startDatetime, cloc, outputFilename
         linesOfCodeFile.write(language)
     linesOfCodeFile.write("\n")
 
-    commitsByDay = getCommitsByDay(repo, startDatetime)
+    commitsByDay = getCommitsByDayOrMonth(repo, startDatetime)
     days = len(commitsByDay)
     dayRange = range(0, days, days / (samples - 1))
     dayRange.append(days)
@@ -313,6 +341,11 @@ def main():
     #writeCommitsByDay(blinkRepo, webkitRepo, startDatetime, outputDir + "commitsByDay.csv", sourceCorePathFilter)
     #print "  done!"
 
+    print "Computing commits per month..."
+    commitByMonthStartDatetime = datetime.datetime(2011, 11, 1)
+    writeCommitsByMonthAppleGoogle(blinkRepo, webkitRepo, commitByMonthStartDatetime, outputDir + "commitsByMonthAppleGoogle.csv", sourceCorePathFilter)
+    print "  done!"
+
     print "Counting lines of code"
     languageList = ["Total lines of code", "Comments", "Perl", "IDL", "C/C++ Header", "Assembly"
                     ,"Objective C", "Python", "Objective C++", "Javascript", "C", "C++"]
@@ -338,8 +371,8 @@ def main():
     print "Computing top files..."
     topFileCount = 500
     topFileExtensionFilter = [".h", ".cpp", ".c", ".idl", ".mm"]
-    writeTopFiles(blinkRepo, forkDatetime, topFileCount, outputDir + "blinkTopFiles.csv", topFileExtensionFilter, sourceCorePathFilter)
-    writeTopFiles(webkitRepo, forkDatetime, topFileCount, outputDir + "webkitTopFiles.csv", topFileExtensionFilter, sourceCorePathFilter)
+    #writeTopFiles(blinkRepo, forkDatetime, topFileCount, outputDir + "blinkTopFiles.csv", topFileExtensionFilter, sourceCorePathFilter)
+    #writeTopFiles(webkitRepo, forkDatetime, topFileCount, outputDir + "webkitTopFiles.csv", topFileExtensionFilter, sourceCorePathFilter)
     print "  done!"
 
 if __name__ == '__main__':

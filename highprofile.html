@@ -4,8 +4,9 @@
 <script src="linesOfCode.js"></script>
 <script src="commitsByDay.js"></script>
 <script src="commitsByOrganization.js"></script>
-<ascript src="averageCommitsByDay.js"></ascript>
+<script src="averageCommitsByDay.js"></script>
 <script src="topFiles.js"></script>
+<script src="commitsByMonthAppleGoogle.js"></script>
 <style>
   body {
     font-family: "Open Sans",Calibri,Candara,Arial,sans-serif;
@@ -116,8 +117,14 @@
 <p>The projects are quickly diverging due to differences in both resources and priorities. In terms of resources, Blink simply has a higher commit rate and, while commit rate is not necessarily a measure of progress, it is a rough proxy. The graph below shows the differences in commit rate over time.</p>
 <div id="commitsByDay" class="graph"></div>
 <p>
-This is not unexpected since Google was the <a href="http://blog.bitergia.com/2013/02/06/report-on-the-activity-of-companies-in-the-webkit-project/">top contributor</a> to Webkit. In terms of core commit count, Blink has 6,000 commits more than Webkit, nearly as many commits Webkit has since the fork (8,700). While not directly comparable (see: What is a browser engine), Mozilla-central had nearly 50,000 commits in the same timeframe. The graph below shows the other major organizations contributing.
+This is not unexpected since Google was the <a href="http://blog.bitergia.com/2013/02/06/report-on-the-activity-of-companies-in-the-webkit-project/">top contributor</a> to Webkit. In terms of core commit count, Blink has 6,000 commits more than Webkit, nearly as many commits Webkit has since the fork (8,700). While not directly comparable (see: What is a browser engine), Mozilla-central had nearly 50,000 commits in the same timeframe.
 </p>
+<p>
+How did the fork affect Apple and Google's commit rates? Both organizations seem to have increased their commits post-fork. Whether this is due to competition or decreased friction is hard to tease out though.
+<div id="commitsByMonthAppleGoogle" class="graph"></div>
+</p>
+
+<h2>The players</h2>
 <div id="commitsByOrganization" class="graph"></div>
 <p>
 Samsung is the second-highest contributor to both projects although twice as many patches land in Blink. Opera and Igalia are the third largest contributors, solely to Blink and Webkit, respectively.

@@ -4,7 +4,7 @@
 <script src="linesOfCode.js"></script>
 <script src="commitsByDay.js"></script>
 <script src="commitsByOrganization.js"></script>
-<script src="averageCommitsByDay.js"></script>
+<ascript src="averageCommitsByDay.js"></ascript>
 <script src="topFiles.js"></script>
 <script src="commitsByMonthAppleGoogle.js"></script>
 <style>
@@ -91,6 +91,11 @@
     position: absolute;
     text-align: right;
   }
+  .textBackground {
+    stroke-width: 3px;
+    stroke: white;
+    fill: white;
+  }
 </style>
 <body>
 <h1>A high-profile fork: one year of Blink and Webkit</h1>
@@ -123,6 +128,10 @@ This is not unexpected since Google was the <a href="http://blog.bitergia.com/20
 How did the fork affect Apple and Google's commit rates? Both organizations seem to have increased their commits post-fork. Whether this is due to competition or decreased friction is hard to tease out though.
 <div id="commitsByMonthAppleGoogle" class="graph"></div>
 </p>
+<p>
+words
+<div id="linesOfCode" class="graph"></div>
+</p>
 
 <h2>The players</h2>
 <div id="commitsByOrganization" class="graph"></div>
@@ -143,8 +152,6 @@ First, the resources difference is clear: both project's top-changed file is Doc
 <p>
 TODO: write me
 </p>
-<div id="commitsByDay" class="graph"></div>
-<div id="linesOfCode" class="graph"></div>
 
 
 <div id="averageCommitsByDay" class="graph"></div>

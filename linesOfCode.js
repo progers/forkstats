@@ -2,15 +2,22 @@
 function cleanupLanguages(data) {
   var cLanguages = ["C/C++ Header", "Objective C", "Objective C++", "C", "C++"];
   for (commit in data) {
+    for (language in data[commit]) {
+      if (language == "date")
+        continue;
+      data[commit][language] = parseInt(data[commit][language]);
+    }
     var cCount = 0;
     for (language in cLanguages) {
-      cCount += parseInt(data[commit][cLanguages[language]]);
+      cCount += data[commit][cLanguages[language]];
       delete data[commit][cLanguages[language]];
     }
     data[commit]["C/C++"] = cCount;
     delete data[commit]["Assembly"];
     delete data[commit]["Perl"];
     delete data[commit]["Python"];
+    delete data[commit]["IDL"];
+    delete data[commit]["Javascript"];
   }
   return data;
 }
@@ -42,7 +49,6 @@ function showLinesOfCode() {
       .orient("left");
 
   var line = d3.svg.line()
-      .interpolate("basis")
       .x(function(d) { return x(d.date); })
       .y(function(d) { return y(d.loc); });
 
@@ -97,24 +103,14 @@ function showLinesOfCode() {
     x.domain(d3.extent(blinkData, function(d) { return d.date; }));
 
     y.domain([
-      d3.min(blinkLanguages, function(c) { return d3.min(c.values, function(v) { return v.loc; }); }),
-      d3.max(blinkLanguages, function(c) { return d3.max(c.values, function(v) { return v.loc; }); })
+      0,
+      1.1 * d3.max(blinkLanguages, function(c) { return d3.max(c.values, function(v) { return v.loc; }); })
     ]);
 
     svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis);
-
-    svg.append("g")
-        .attr("class", "y axis")
-        .call(yAxis)
-      .append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 6)
-        .attr("dy", ".71em")
-        .style("text-anchor", "end")
-        .text("Source lines of code");
 
     svg.append("line")
         .attr("class", "forkline")
@@ -156,6 +152,23 @@ function showLinesOfCode() {
         .attr("x", 3)
         .attr("dy", ".35em")
         .text(function(d) { return d.name; });
+
+    var yAxisText = svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
+    yAxisText.append("text")
+        .attr("class", "textBackground")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("Core lines of code")
+    yAxisText.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("Core lines of code");
   }
 }
 

@@ -234,8 +234,14 @@ def writeCommitsByOrganization(repo, startDatetime, outputFilename, sourceCorePa
         commitsByOrganizationFile.write(str(commitsByOrganization[organization]))
         commitsByOrganizationFile.write("\n")
 
-def getLinesOfCodeByLanguage(dir, cloc, languageList):
-    clocOutput = Popen(cloc + " " + dir + " --csv", stdout=PIPE, shell=True).stdout.read()
+def getLinesOfCodeByLanguage(dir, cloc, languageList, sourceCorePathFilter):
+    paths = []
+    for sourceCorePath in sourceCorePathFilter:
+        path = dir + "/" + sourceCorePath
+        if (os.path.isdir(path)):
+            paths.append(path)
+
+    clocOutput = Popen(cloc + " " + (" ".join(paths)) + " --csv", stdout=PIPE, shell=True).stdout.read()
     linesOfCodeByLanguage = {}
     totalComments = 0
     totalLinesOfCode = 0
@@ -250,11 +256,11 @@ def getLinesOfCodeByLanguage(dir, cloc, languageList):
                 linesOfCodeByLanguage[language] = code
                 totalComments = totalComments + int(columns[3])
     linesOfCodeByLanguage["Comments"] = totalComments
-    linesOfCodeByLanguage["Total lines of code"] = totalLinesOfCode
+    linesOfCodeByLanguage["Total"] = totalLinesOfCode
     return linesOfCodeByLanguage
 
 
-def writeLinesOfCode(repoDir, repo, samples, startDatetime, cloc, outputFilename, languageList):
+def writeLinesOfCode(repoDir, repo, samples, startDatetime, cloc, outputFilename, languageList, sourceCorePathFilter):
     if (not os.path.isfile(cloc)):
         print "cloc not found."
         return
@@ -286,7 +292,7 @@ def writeLinesOfCode(repoDir, repo, samples, startDatetime, cloc, outputFilename
         git.checkout(commit.hexsha, force=True)
         
         linesOfCodeFile.write(commitDate)
-        linesOfCode = getLinesOfCodeByLanguage(repoDir + "/Source", cloc, languageList)
+        linesOfCode = getLinesOfCodeByLanguage(repoDir, cloc, languageList, sourceCorePathFilter)
         for language in languageList:
             linesOfCodeFile.write(",")
             if language in linesOfCode:
@@ -343,15 +349,15 @@ def main():
 
     print "Computing commits per month..."
     commitByMonthStartDatetime = datetime.datetime(2011, 11, 1)
-    writeCommitsByMonthAppleGoogle(blinkRepo, webkitRepo, commitByMonthStartDatetime, outputDir + "commitsByMonthAppleGoogle.csv", sourceCorePathFilter)
+    #writeCommitsByMonthAppleGoogle(blinkRepo, webkitRepo, commitByMonthStartDatetime, outputDir + "commitsByMonthAppleGoogle.csv", sourceCorePathFilter)
     print "  done!"
 
     print "Counting lines of code"
-    languageList = ["Total lines of code", "Comments", "Perl", "IDL", "C/C++ Header", "Assembly"
+    languageList = ["Total", "Comments", "Perl", "IDL", "C/C++ Header", "Assembly"
                     ,"Objective C", "Python", "Objective C++", "Javascript", "C", "C++"]
-    samples = 160 # number of times to count lines of code
-    #writeLinesOfCode(blinkDir, blinkRepo, samples, startDatetime, cloc, outputDir + "blinkLinesOfCode.csv", languageList)
-    #writeLinesOfCode(webkitDir, webkitRepo, samples, startDatetime, cloc, outputDir + "webkitLinesOfCode.csv", languageList)
+    samples = 3 # number of times to count lines of code
+    writeLinesOfCode(blinkDir, blinkRepo, samples, startDatetime, cloc, outputDir + "blinkLinesOfCode.csv", languageList, sourceCorePathFilter)
+    #writeLinesOfCode(webkitDir, webkitRepo, samples, startDatetime, cloc, outputDir + "webkitLinesOfCode.csv", languageList, sourceCorePathFilter)
     print "  done!"
 
     #print "Computing commits by organization..."

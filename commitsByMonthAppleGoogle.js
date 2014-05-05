@@ -58,16 +58,6 @@ function showCommitsByMonth() {
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis);
 
-    svg.append("g")
-        .attr("class", "y axis")
-        .call(yAxis)
-      .append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 6)
-        .attr("dy", ".71em")
-        .style("text-anchor", "end")
-        .text("Core commits by month");
-
     svg.append("line")
         .attr("class", "forkline")
         .attr("x1", x(forkDate))
@@ -108,6 +98,22 @@ function showCommitsByMonth() {
         .style("fill", function(d) { return color(d.orgName); })
         .style("stroke", "transparent");
 
+    var yAxisText = svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
+    yAxisText.append("text")
+        .attr("class", "textBackground")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("Core commits by month");
+    yAxisText.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("Core commits by month");
   });
 }
 

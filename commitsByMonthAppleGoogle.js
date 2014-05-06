@@ -1,5 +1,5 @@
 function showCommitsByMonth() {
-  var margin = {top: 20, right: 100, bottom: 20, left: 60},
+  var margin = {top: 20, right: 50, bottom: 20, left: 50},
       width = 960 - margin.left - margin.right,
       height = 200 - margin.top - margin.bottom;
   var parseDate = d3.time.format("%Y%m%d").parse;

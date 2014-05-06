@@ -37,7 +37,7 @@ function showCommitsByOrganization() {
     data.sort(function(a, b) { return (a.Webkit + 2*b.Blink) - (b.Webkit + 2*a.Blink);});
     
 
-  var margin = {top: 20, right: 100, bottom: 20, left: 60},
+  var margin = {top: 20, right: 20, bottom: 20, left: 20},
       width = 960 - margin.left - margin.right,
       height = 350 - margin.top - margin.bottom;
 
@@ -51,7 +51,6 @@ function showCommitsByOrganization() {
 
     var color = d3.scale.ordinal()
         .range(["#1f77b4", "#ff7f0e", "#9467bd"]);
-//        .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
 
     var xAxis = d3.svg.axis()
         .scale(x0)

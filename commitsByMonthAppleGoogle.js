@@ -49,7 +49,7 @@ function showCommitsByMonth() {
 
     x.domain(d3.extent(data, function(d) { return d.date; }));
     y.domain([
-      d3.min(commitsData, function(c) { return d3.min(c.values, function(v) { return v.commitCount; }); }),
+      0,
       d3.max(commitsData, function(c) { return d3.max(c.values, function(v) { return v.commitCount; }); })
     ]);
 

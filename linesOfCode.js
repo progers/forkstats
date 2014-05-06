@@ -18,6 +18,7 @@ function cleanupLanguages(data) {
     delete data[commit]["Python"];
     delete data[commit]["IDL"];
     delete data[commit]["Javascript"];
+    delete data[commit]["Comments"];
   }
   return data;
 }
@@ -38,7 +39,11 @@ function showLinesOfCode() {
   var y = d3.scale.linear()
       .range([height, 0]);
 
-  var color = d3.scale.category10();
+  //["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"]
+  var blinkColor = d3.scale.ordinal()
+    .range(["#1f77b4", "#2ca02c", "#9467bd"]);
+  var webkitColor = d3.scale.ordinal()
+    .range(["#ff7f0e", "#d62728", "#e377c2"]);
 
   var xAxis = d3.svg.axis()
       .scale(x)
@@ -74,7 +79,8 @@ function showLinesOfCode() {
     if (!blinkData || !webkitData)
       return;
 
-    color.domain(d3.keys(blinkData[0]).filter(function(key) { return key !== "date"; }));
+    blinkColor.domain(d3.keys(blinkData[0]).filter(function(key) { return key !== "date"; }));
+    webkitColor.domain(d3.keys(webkitData[0]).filter(function(key) { return key !== "date"; }));
 
     blinkData.forEach(function(d) {
       d.date = parseDate(d.date);
@@ -83,7 +89,7 @@ function showLinesOfCode() {
       d.date = parseDate(d.date);
     });
 
-    var blinkLanguages = color.domain().map(function(name) {
+    var blinkLanguages = blinkColor.domain().map(function(name) {
       return {
         name: name,
         values: blinkData.map(function(d) {
@@ -91,7 +97,7 @@ function showLinesOfCode() {
         })
       };
     });
-    var webkitLanguages = color.domain().map(function(name) {
+    var webkitLanguages = webkitColor.domain().map(function(name) {
       return {
         name: name,
         values: webkitData.map(function(d) {
@@ -127,7 +133,7 @@ function showLinesOfCode() {
     blinkLanguage.append("path")
         .attr("class", "line")
         .attr("d", function(d) { return line(d.values); })
-        .style("stroke", function(d) { return color(d.name); });
+        .style("stroke", function(d) { return blinkColor(d.name); });
 
     blinkLanguage.append("text")
         .datum(function(d) { return {name: "Blink " + d.name, value: d.values[d.values.length - 1]}; })
@@ -144,7 +150,7 @@ function showLinesOfCode() {
     webkitLanguage.append("path")
         .attr("class", "line")
         .attr("d", function(d) { return line(d.values); })
-        .style("stroke", function(d) { return color(d.name); });
+        .style("stroke", function(d) { return webkitColor(d.name); });
 
     webkitLanguage.append("text")
         .datum(function(d) { return {name: "Webkit " + d.name, value: d.values[d.values.length - 1]}; })

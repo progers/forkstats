@@ -108,54 +108,51 @@
     <tr><td class="leftcolumn">2013/5/21</td><td>Tech reporting is terrible v1 (<a href="http://news.softpedia.com/news/For-Chrome-s-Blink-Google-Has-Already-Removed-8-8-Million-Lines-of-WebKit-Code-354831.shtml">8.8M LOC</a>)</td></tr>
     <tr><td class="leftcolumn">2013/5/22</td><td>Tech reporting is terrible v2 (<a href="http://news.softpedia.com/news/WebKit-Removes-8-8-Million-of-Code-After-Google-s-Departure-355192.shtml">8.8M LOC</a>)</td></tr>
     <tr><td class="leftcolumn">2013/9/12</td><td>QT switches from WebKit to Blink (<a href="https://lists.webkit.org/pipermail/webkit-dev/2013-September/025449.html">webkit-dev</a>)</td></tr>
-    <tr><td class="leftcolumn">2014/1/23</td><td>CSS Regions dropped from Blink (<a href="https://groups.google.com/a/chromium.org/d/msg/blink-dev/kTktlHPJn4Q/YrnfLxeMO7IJ">post</a>)</td></tr>
   </table>
 </div>
 
-<p>In 2013 the <a href="http://en.wikipedia.org/wiki/Browser_wars">browser wars</a> sprouted a new rendering engine: Blink. When Blink forked in April 2013, Webkit had 1.8 million lines of C++, <a href="https://www.ohloh.net/p/WebKit">2,500</a> commits per month and was the most popular browser engine. On mobile, Webkit backed the top 3 browsers (Apple Safari, Google Chrome, Android Browser), accounting for over 75% of mobile browsers. This post is a look at the Blink/Webkit fork one year later: how have the projects diverged, who is driving them, and where are they headed?</p>
+<p>In 2013 the <a href="http://en.wikipedia.org/wiki/Browser_wars">browser wars</a> sprouted a new rendering engine: Blink. When Blink forked in April 2013, Webkit had 1.8 million lines of C++, <a href="https://www.ohloh.net/p/WebKit">2,500</a> commits per month and was the most popular browser engine. On mobile, Webkit backed the top 3 browsers (Apple Safari, Google Chrome, Android Browser), accounting for the majority of mobile browsers. This post is a look at the Blink/Webkit fork one year later: how have the projects diverged, who is driving them, and where are they headed?</p>
 
 <h2>What is a browser engine?</h2>
-<p>A discussion of Blink and Webkit has to define exactly which parts are the core engine. For example, Webkit contains a first-class javascript engine (JSC) and two application layers (Webkit1 and the multiprocess Webkit2), neither of which are in Blink. In this discussion, "Source/" is the C++ code of the Webkit project (including JSC, etc.) and "core" is just the common code shared by Blink and Webkit such as Source/WebCore and Source/WTF.</p>
-<p>In part due to not understanding the subtle differences between the projects, the ever-lazy tech media reported Blink removed <a href="http://www.engadget.com/2013/05/16/google-blink-team-pulls-8-8-million-lines-of-webkit-code/">8.8 million lines of code</a>. One wonders how Blink manages to run on -7 million lines of code! "git diff --stat" shows that over 8.8 million lines were actually deleted in Blink, primarily layout tests. Looking at the core code shared by both engines, Blink has 207,000 fewer lines of actual code (out of a total of 677,000 for Blink and 883,000 for Webkit. The tech media later didn't get <a href="http://trac.webkit.org/changeset/164131">a joke</a> by Andreas Kling and reported Webkit also <a href="http://news.softpedia.com/news/WebKit-Removes-8-8-Million-of-Code-After-Google-s-Departure-355192.shtml">removed 8.8 million lines</a> of ShadowDOM.</p>
+<p>Both WebKit and Blink are more than just browser engines--for example Webkit contains a first-class javascript engine (JSC) and two application layers (Webkit1, Webkit2) which are not in Blink. For this discussion, the "core" engine code is the common code shared by Blink and Webkit such as <a href="http://trac.webkit.org/browser/trunk/Source/WebCore/">Source/WebCore</a> and <a href="https://code.google.com/p/chromium/codesearch#chromium/src/third_party/WebKit/Source/wtf/">Source/WTF</a>. This core code is what positions and draws the text you're reading now.</p>
+<p>By not understanding the subtle differences between the projects, the tech media reported Blink removed <a href="http://www.engadget.com/2013/05/16/google-blink-team-pulls-8-8-million-lines-of-webkit-code/">8.8 million lines of code</a>. How Blink manages to run on -7 million lines of code is a mystery. ("git diff --stat" shows that 8.8 million lines were removed post-fork in Blink, primarily layout test and supporting images.) <a href="http://trac.webkit.org/changeset/164131">A joke</a> by Andreas Kling was later misreported as WebKit <a href="http://news.softpedia.com/news/WebKit-Removes-8-8-Million-of-Code-After-Google-s-Departure-355192.shtml">removing 8.8 million lines</a> of ShadowDOM.</p>
 
 <h2>Divergence</h2>
-<p>The projects are quickly diverging due to differences in both resources and priorities. In terms of resources, Blink simply has a higher commit rate and, while commit rate is not necessarily a measure of progress, it is a rough proxy. The graph below shows the differences in commit rate over time.</p>
+<p>The projects are quickly diverging due to differences in resources and priorities. The graph below shows the differences in commit rate over time. Blink's faster trajectory isn't unexpected since Google was the <a href="http://blog.bitergia.com/2013/02/06/report-on-the-activity-of-companies-in-the-webkit-project/">top contributor</a> to Webkit.</p>
 <div id="commitsByDay" class="graph"></div>
 <p>
-This is not unexpected since Google was the <a href="http://blog.bitergia.com/2013/02/06/report-on-the-activity-of-companies-in-the-webkit-project/">top contributor</a> to Webkit. In terms of core commit count, Blink has 6,000 commits more than Webkit, nearly as many commits Webkit has since the fork (8,700). While not directly comparable (see: What is a browser engine), Mozilla-central had nearly 50,000 commits in the same timeframe.
-</p>
-<p>
-How did the fork affect Apple and Google's commit rates? Both organizations seem to have increased their commits post-fork. Whether this is due to competition or decreased friction is hard to tease out though.
+How did the fork affect Apple and Google's commit rates? Both organizations increased their commits post-fork. Whether this is due to competition or decreased friction is hard to tease out:
 <div id="commitsByMonthAppleGoogle" class="graph"></div>
 </p>
 <p>
-words
+In terms of core lines of code, both projects have reduced lines code considerably:
 <div id="linesOfCode" class="graph"></div>
 </p>
 
 <h2>The players</h2>
-<div id="commitsByOrganization" class="graph"></div>
 <p>
-Samsung is the second-highest contributor to both projects although twice as many patches land in Blink. Opera and Igalia are the third largest contributors, solely to Blink and Webkit, respectively.
+Google and Apple are by-far the largest contributors to Blink and WebKit (note the axis scales). Samsung is the second-largest contributor to both projects although twice as many patches land in Blink. Opera and Igalia are the third largest contributors, solely to Blink and Webkit, respectively.
 </p>
+<div id="commitsByOrganization" class="graph"></div>
 
 <h2>Priorities and revealed preferences</h2>
 <p>
-Blink has explicitly outlined goals in Eric Seidel's <a href="https://groups.google.com/a/chromium.org/d/topic/blink-dev/Z5OzwYh3Wfk/discussion">2014 brainstorming</a> post. A core theme is clearly mobile-focused performance. Webkit doesn't have stated goals but we can tease out each project's goals by looking at the top-modified files.
+The graph below shows the top core files modified in each project. The change count is listed in parenthesis and the size of each box is relative to the change count within the project. The similarities in priorities are interesting, though Blink has several times more changes in each file.
 </p>
 <div id="topFiles" class="graph"></div><br>
+
+<h2>De-fork WebKit?</h2>
 <p>
-First, the resources difference is clear: both project's top-changed file is Document.cpp but Blink has 2.5x the number of changes. Blink has a strong focus on UseCounter metrics (which backs the <a href="http://www.chromestatus.com/metrics/feature/popularity">usage statistics</a>). Canvas and EvenHandler are also relatively popular in Blink. Webkit has a strong focus on text layout with top changes in RenderBlockLineLayout and RenderBlockFlow. Additionally, CSSParser, AccessibilityRenderObject, and Editing are all relatively popular in Webkit.
+To web developers, the two projects are still remarkably similar due to merges of bugfixes between the projects--that won't last. Blink's <a href="http://www.chromium.org/blink/blink-gc">Oilpan</a> project will switch Blink from from reference counting to garbage collecting C++ objects. Merges from WebKit to Blink will be difficult without introducing security bugs and the projects will start diverging much faster. Blink has over twice the number of developers and WebKit will fall behind without more.
 </p>
-
-<h2>The future</h2>
 <p>
-TODO: write me
+The web loses by having four major browser engines: effort is duplicated, compatibility is reduced. Competition is a cornerstone of the web and it will continue in a de-forked world: WWDC'14 will show Safari innovating in many areas (JavaScriptCore in particular) but text layout doesn't sell devices. Who wouldn't want to see the multiple script engine support added to Blink for Dart being used for a second JS engine? It's a <a href="http://en.wikipedia.org/wiki/Series_of_tubes">pipe dream</a> but it would be best for the web.
 </p>
+<p>
 
-
-<div id="averageCommitsByDay" class="graph"></div>
-<div id="averageCommitsByDayByOrganization" class="graph"></div>
-
+</p>
+<br/>
+<br/>
+<br/>
 </body>
 </html>

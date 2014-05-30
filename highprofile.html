@@ -4,7 +4,6 @@
 <script src="linesOfCode.js"></script>
 <script src="commitsByDay.js"></script>
 <script src="commitsByOrganization.js"></script>
-<ascript src="averageCommitsByDay.js"></ascript>
 <script src="topFiles.js"></script>
 <script src="commitsByMonthAppleGoogle.js"></script>
 <style>
@@ -16,8 +15,8 @@
     color: #333;
     margin-right: auto;
     margin-left: auto;
-    padding-right: 75px;
-    padding-left: 75px;
+    padding-right: 85px;
+    padding-left: 85px;
   }
   h1, h2, h3 {
     font-weight: 300;
@@ -46,14 +45,13 @@
     text-align: right;
   }
   .graph {
-    font-size: 10px;
+    font-size: 15px;
     margin-right: -75px;
     margin-left: -75px;
   }
   #topFiles {
     margin-left: 0px;
   }
-
   .axis path, .axis line {
     fill: none;
     stroke: #000;
@@ -65,13 +63,18 @@
   .line {
     fill: none;
     stroke: steelblue;
-    stroke-width: 1.5px;
+    stroke-width: 2.0px;
+    stroke-linecap: round;
   }
   .forkline {
     stroke: steelblue;
-    stroke-width: 1px;
+    stroke-width: 2px;
     stroke-dasharray: 3 3;
     stroke-opacity: 0.2;
+  }
+  .commitsByMonthAppleGoogleLine {
+    stroke-width: 1.5px;
+    stroke-dasharray: 3 3;
   }
   #commitsByDay {
   }
@@ -95,6 +98,9 @@
     stroke-width: 3px;
     stroke: white;
     fill: white;
+  }
+  .dashing path {
+    stroke-dashArray: 7;
   }
 </style>
 <body>
@@ -121,12 +127,12 @@
 <p>The projects are quickly diverging due to differences in resources and priorities. The graph below shows the differences in commit rate over time. Blink's faster trajectory isn't unexpected since Google was the <a href="http://blog.bitergia.com/2013/02/06/report-on-the-activity-of-companies-in-the-webkit-project/">top contributor</a> to Webkit.</p>
 <div id="commitsByDay" class="graph"></div>
 <p>
-How did the fork affect Apple and Google's commit rates? Both organizations increased their commits post-fork. Whether this is due to competition or decreased friction is hard to tease out:
-<div id="commitsByMonthAppleGoogle" class="graph"></div>
-</p>
-<p>
 In terms of core lines of code, both projects have reduced lines code considerably:
 <div id="linesOfCode" class="graph"></div>
+</p>
+<p>
+How did the fork affect Apple and Google's commit rates? Both organizations increased their commits post-fork. Whether this is due to competition or decreased friction is hard to tease out:
+<div id="commitsByMonthAppleGoogle" class="graph"></div>
 </p>
 
 <h2>The players</h2>

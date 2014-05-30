@@ -1,7 +1,7 @@
 function showCommitsByMonth() {
-  var margin = {top: 20, right: 50, bottom: 20, left: 50},
+  var margin = {top: 20, right: 110, bottom: 30, left: 70},
       width = 960 - margin.left - margin.right,
-      height = 200 - margin.top - margin.bottom;
+      height = 250 - margin.top - margin.bottom;
   var parseDate = d3.time.format("%Y%m%d").parse;
   var forkDate = parseDate("20130403");
 
@@ -17,6 +17,7 @@ function showCommitsByMonth() {
       .orient("bottom");
   var yAxis = d3.svg.axis()
       .scale(y)
+      .ticks(7)
       .orient("left");
 
   var line = d3.svg.line()
@@ -27,7 +28,7 @@ function showCommitsByMonth() {
       .attr("viewBox", "0 0 " + (width + margin.left + margin.right) + " " + (height + margin.top + margin.bottom))
       .attr("preserveAspectRatio", "xMidYMid")
       .attr("width", "100%")
-      .attr("height", "200px")
+      .attr("height", "250px")
     .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -71,9 +72,8 @@ function showCommitsByMonth() {
         .attr("class", "commits");
 
     commits.append("path")
-        .attr("class", "line")
+        .attr("class", "line commitsByMonthAppleGoogleLine")
         .attr("d", function(d) { return line(d.values); })
-        .style("stroke-dasharray", "2")
         .style("stroke", function(d) { return color(d.name); });
 
     commits.append("text")
@@ -94,7 +94,7 @@ function showCommitsByMonth() {
         .attr("class", "line")
         .attr("cx", function(d) { return x(d.date); })
         .attr("cy", function(d) { return y(d.commitCount); })
-        .attr("r", 3)
+        .attr("r", 3.5)
         .style("fill", function(d) { return color(d.orgName); })
         .style("stroke", "transparent");
 

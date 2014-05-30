@@ -35,9 +35,8 @@ function showCommitsByOrganization() {
     }
     // Gives a decent looking sort with Google on the left and Apple on the right.
     data.sort(function(a, b) { return (a.Webkit + 2*b.Blink) - (b.Webkit + 2*a.Blink);});
-    
 
-  var margin = {top: 20, right: 20, bottom: 20, left: 20},
+  var margin = {top: 20, right: 50, bottom: 30, left: 50},
       width = 960 - margin.left - margin.right,
       height = 350 - margin.top - margin.bottom;
 
@@ -59,6 +58,7 @@ function showCommitsByOrganization() {
 
     var yAxis = d3.svg.axis()
         .scale(y)
+        .ticks(9)
         .orient("left")
         .tickFormat(d3.format(".2s"));
 

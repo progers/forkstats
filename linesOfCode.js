@@ -1,4 +1,5 @@
 // Combine the c-like languages and remove Assembly, Perl, and Python (lol "languages")
+// Also remove the "Total" data entirely, as it cleans up the graphs.
 function cleanupLanguages(data) {
   var cLanguages = ["C/C++ Header", "Objective C", "Objective C++", "C", "C++"];
   for (commit in data) {
@@ -19,6 +20,8 @@ function cleanupLanguages(data) {
     delete data[commit]["IDL"];
     delete data[commit]["Javascript"];
     delete data[commit]["Comments"];
+
+    delete data[commit]["Total"];
   }
   return data;
 }
@@ -27,7 +30,7 @@ function showLinesOfCode() {
   var blinkData = undefined;
   var webkitData = undefined;  
 
-  var margin = {top: 20, right: 50, bottom: 20, left: 50},
+  var margin = {top: 20, right: 110, bottom: 30, left: 70},
       width = 960 - margin.left - margin.right,
       height = 350 - margin.top - margin.bottom;
   var parseDate = d3.time.format("%Y%m%d").parse;
@@ -46,7 +49,8 @@ function showLinesOfCode() {
 
   var xAxis = d3.svg.axis()
       .scale(x)
-      .orient("bottom");
+      .orient("bottom")
+      .ticks(9);
 
   var yAxis = d3.svg.axis()
       .scale(y)
@@ -157,6 +161,16 @@ function showLinesOfCode() {
         .attr("x", 3)
         .attr("dy", ".35em")
         .text(function(d) { return d.name; });
+
+    // Add a dashed version of Blink to create a nice overlap effect.
+    var blinkLanguageDashed = svg.selectAll(".blinkLanguageDashed")
+        .data(blinkLanguages)
+      .enter().append("g")
+        .attr("class", "dashing");
+    blinkLanguageDashed.append("path")
+        .attr("class", "line")
+        .attr("d", function(d) { return line(d.values); })
+        .style("stroke", function(d) { return blinkColor(d.name); });
 
     var yAxisText = svg.append("g")
         .attr("class", "y axis")

@@ -1,5 +1,5 @@
 function showCommitsByDay() {
-  var margin = {top: 20, right: 50, bottom: 20, left: 50},
+  var margin = {top: 20, right: 110, bottom: 30, left: 70},
       width = 960 - margin.left - margin.right,
       height = 350 - margin.top - margin.bottom;
   var parseDate = d3.time.format("%Y%m%d").parse;
@@ -14,7 +14,8 @@ function showCommitsByDay() {
 
   var xAxis = d3.svg.axis()
       .scale(x)
-      .orient("bottom");
+      .orient("bottom")
+      .ticks(9);
   var yAxis = d3.svg.axis()
       .scale(y)
       .orient("left");
@@ -82,6 +83,19 @@ function showCommitsByDay() {
         .attr("class", "commits");
 
     commits.append("path")
+        .attr("class", "line")
+        .attr("d", function(d) { return line(d.values); })
+        .style("stroke", function(d) { return color(d.name); });
+
+    // Add a dashed version of Blink to create a nice overlap effect.
+    var dashingCommitsData = [];
+    dashingCommitsData[0] = commitsData[0];
+    dashingCommitsData[1] = commitsData[2];
+    var commitsDashed = svg.selectAll(".commitsDashed")
+        .data(dashingCommitsData)
+      .enter().append("g")
+        .attr("class", "dashing");
+    commitsDashed.append("path")
         .attr("class", "line")
         .attr("d", function(d) { return line(d.values); })
         .style("stroke", function(d) { return color(d.name); });

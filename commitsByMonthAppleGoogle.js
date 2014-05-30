@@ -86,7 +86,7 @@ function showCommitsByMonth() {
     var markers = svg.selectAll(".markers")
         .data(commitsData)
       .enter().append("g")
-        .attr("class", "commits");
+        .attr("class", "commitMarkers");
 
     markers.selectAll(".circles")
         .data(function(d) { return d.values; })
@@ -95,8 +95,7 @@ function showCommitsByMonth() {
         .attr("cx", function(d) { return x(d.date); })
         .attr("cy", function(d) { return y(d.commitCount); })
         .attr("r", 3.5)
-        .style("fill", function(d) { return color(d.orgName); })
-        .style("stroke", "transparent");
+        .style("color", function(d) { return color(d.orgName); });
 
     var yAxisText = svg.append("g")
         .attr("class", "y axis")

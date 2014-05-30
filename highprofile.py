@@ -72,7 +72,7 @@ def writeCommitsByMonthAppleGoogle(blinkRepo, webkitRepo, startDatetime, outputF
     appleCommitsByMonth = getCommitsByDayOrMonth(webkitRepo, startDatetime, sourceCorePathFilter, False, "Apple")
     monthRange = list(set(iter(googleCommitsByMonth)) | set(iter(appleCommitsByMonth)))
     # remove the last month so we don't show partial data
-    monthRange.pop()
+    # monthRange.pop()
     commitsByMonthFile = open(outputFilename, "w")
     commitsByMonthFile.write("date,Google,Apple\n")
 
@@ -344,25 +344,25 @@ def main():
 
 
     print "Computing commits by day..."
-    #writeCommitsByDay(blinkRepo, webkitRepo, startDatetime, outputDir + "commitsByDay.csv", sourceCorePathFilter)
+    writeCommitsByDay(blinkRepo, webkitRepo, startDatetime, outputDir + "commitsByDay.csv", sourceCorePathFilter)
     print "  done!"
 
     print "Computing commits per month..."
     commitByMonthStartDatetime = datetime.datetime(2011, 11, 1)
-    #writeCommitsByMonthAppleGoogle(blinkRepo, webkitRepo, commitByMonthStartDatetime, outputDir + "commitsByMonthAppleGoogle.csv", sourceCorePathFilter)
+    writeCommitsByMonthAppleGoogle(blinkRepo, webkitRepo, commitByMonthStartDatetime, outputDir + "commitsByMonthAppleGoogle.csv", sourceCorePathFilter)
     print "  done!"
 
     print "Counting lines of code"
     languageList = ["Total", "Comments", "Perl", "IDL", "C/C++ Header", "Assembly"
                     ,"Objective C", "Python", "Objective C++", "Javascript", "C", "C++"]
     samples = 300 # number of times to count lines of code
-    writeLinesOfCode(blinkDir, blinkRepo, samples, startDatetime, cloc, outputDir + "blinkLinesOfCode.csv", languageList, sourceCorePathFilter)
-    writeLinesOfCode(webkitDir, webkitRepo, samples, startDatetime, cloc, outputDir + "webkitLinesOfCode.csv", languageList, sourceCorePathFilter)
+    #writeLinesOfCode(blinkDir, blinkRepo, samples, startDatetime, cloc, outputDir + "blinkLinesOfCode.csv", languageList, sourceCorePathFilter)
+    #writeLinesOfCode(webkitDir, webkitRepo, samples, startDatetime, cloc, outputDir + "webkitLinesOfCode.csv", languageList, sourceCorePathFilter)
     print "  done!"
 
     print "Computing commits by organization..."
-    #writeCommitsByOrganization(blinkRepo, forkDatetime, outputDir + "blinkCommitsByOrganization.csv", sourceCorePathFilter)
-    #writeCommitsByOrganization(webkitRepo, forkDatetime, outputDir + "webkitCommitsByOrganization.csv", sourceCorePathFilter)
+    writeCommitsByOrganization(blinkRepo, forkDatetime, outputDir + "blinkCommitsByOrganization.csv", sourceCorePathFilter)
+    writeCommitsByOrganization(webkitRepo, forkDatetime, outputDir + "webkitCommitsByOrganization.csv", sourceCorePathFilter)
     print "  done! Wrote {blink,webkit}CommitsByOrganization.csv"
 
     print "Computing commits per day moving averages..."

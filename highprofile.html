@@ -49,9 +49,6 @@
     margin-right: -75px;
     margin-left: -75px;
   }
-  #topFiles {
-    margin-left: 0px;
-  }
   .axis path, .axis line {
     fill: none;
     stroke: #000;
@@ -85,8 +82,21 @@
     overflow: hidden;
     position: absolute;
     text-indent: 2px;
+    word-break: break-all;
   }
-  #topFiles div {
+  #topFiles {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    min-width: 960px;
+  }
+  #topFiles #Webkit {
+    order: 2;
+  }
+  #topFiles #Blink {
+    order: 1;
+  }
+  #topFiles qqdiv {
     float: left;
   }
   .topFilesTitle {

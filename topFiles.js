@@ -7,9 +7,10 @@ function showTopFiles() {
   });
 
   function createHierarchy(data) {
+    var numNodes = 20;
     hierarchy = {name: "root"};
     for (dat in data) {
-      if (dat > 35) break;
+      if (dat > numNodes) break;
       var path = data[dat].path;
       var file = data[dat].file;
       var count = data[dat].count;
@@ -44,10 +45,11 @@ function showTopFiles() {
     root = createHierarchy(data);
 
     var margin = {top: 0, right: 10, bottom: 25, left: 10},
-        width = 435 - margin.left - margin.right,
+        width = 445 - margin.left - margin.right,
         height = 300 - margin.top - margin.bottom;
 
-    var color = d3.scale.category20c();
+    // Colors from https://github.com/mbostock/d3/blob/master/lib/colorbrewer/colorbrewer.js
+    var color = (repo == "Blink" ? d3.scale.ordinal().range(["#f7fbff","#deebf7","#c6dbef","#9ecae1","#6baed6","#4292c6","#2171b5"]) : d3.scale.ordinal().range(["#fff5eb","#fee6ce","#fdd0a2","#fdae6b","#fd8d3c","#f16913","#d94801"]));
 
     var treemap = d3.layout.treemap()
         .size([width, height])
@@ -59,10 +61,7 @@ function showTopFiles() {
         .style("width", (width + margin.left + margin.right) + "px")
         .style("height", (height + margin.top + margin.bottom) + "px")
         .style("top", margin.top + "px");
-    if (repo == "Webkit")
-      div.style("left", margin.left + "px");
-    else
-      div.style("right", margin.right + "px");
+    div[0][0].setAttribute('id', repo);
     d3.select("#topFiles").style("height", height + "px");
 
     var node = div.datum(root).selectAll(".node")
@@ -71,7 +70,7 @@ function showTopFiles() {
         .attr("class", "topFilesNode")
         .call(position)
         .style("background", function(d) { return d.children ? color(d.name) : null; })
-        .text(function(d) { return d.children ? null : d.name + " (" + d.size + ")"; })
+        .html(function(d) { return d.children ? null : d.name + "<br>(" + d.size + ")"; })
         .attr("title", function(d) { return d.children ? null : d.name; });
 
     div.append("div")
@@ -79,7 +78,7 @@ function showTopFiles() {
         .style("left", 0 + "px")
         .style("width", width + "px")
         .style("top", height + "px")
-        .text("Top core files changed since fork in " + repo + " (change count in parenthesis)");
+        .text("Top " + repo + " core changes since fork (count in parenthesis)");
   }
 
   function position() {

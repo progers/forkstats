@@ -79,7 +79,7 @@ function showCommitsByMonth() {
     commits.append("text")
         .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
         .attr("transform", function(d) { return "translate(" + x(d.value.date) + "," + y(d.value.commitCount) + ")"; })
-        .attr("x", 3)
+        .attr("x", 7)
         .attr("dy", ".35em")
         .text(function(d) { return d.name; });
 

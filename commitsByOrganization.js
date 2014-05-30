@@ -41,7 +41,7 @@ function showCommitsByOrganization() {
       height = 350 - margin.top - margin.bottom;
 
     var x0 = d3.scale.ordinal()
-        .rangeRoundBands([0, width], .4);
+        .rangeRoundBands([0, width], .3);
 
     var x1 = d3.scale.ordinal();
 
@@ -114,7 +114,7 @@ function showCommitsByOrganization() {
       .enter().append("text")
         .attr("x", function(d) { return x1(d.name) + x1.rangeBand() / 2; })
         .attr("y", function(d) { return y(d.value)-1; })
-        .style("text-anchor", "middle")
+        .attr("class", "commitsByOrganizationText")
         .text(function(d) { return d.value > 0 ? d3.format(".2s")(d.value) : ""; });
 
     var legend = svg.selectAll(".legend")
@@ -124,8 +124,8 @@ function showCommitsByOrganization() {
         .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 
     legend.append("rect")
-        .attr("x", width - 18)
-        .attr("width", 18)
+        .attr("x", width - 21)
+        .attr("width", 21)
         .attr("height", 18)
         .style("fill", color);
 

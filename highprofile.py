@@ -172,7 +172,7 @@ def getOrganizationFromCommit(commit):
     if ("access-company" in email):
         return "Access-company"
     if ("blackberry" in email or "@rim.com" in email):
-        return "RIM"
+        return "BB/RIM"
     if ("nvidia" in email):
         return "Nvidia"
     if ("flexsim" in email):
@@ -180,7 +180,7 @@ def getOrganizationFromCommit(commit):
     if ("openbossa" in email):
         return "Openbossa"
     if ("szeged" in email or "reni" in email):
-        return "Szeged"
+        return "U.Szeged"
     if ("company100" in email):
         return "company100"
     if ("fred.wang" in email):

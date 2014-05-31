@@ -172,7 +172,7 @@ def getOrganizationFromCommit(commit):
     if ("access-company" in email):
         return "Access-company"
     if ("blackberry" in email or "@rim.com" in email):
-        return "Blackberry"
+        return "RIM"
     if ("nvidia" in email):
         return "Nvidia"
     if ("flexsim" in email):
@@ -194,7 +194,7 @@ def getOrganizationFromCommit(commit):
     if ("cisco" in email):
         return "Cisco"
     if ("cablelabs" in email):
-        return "cablelabs"
+        return "CableLabs"
     if ("fujitsu" in email):
         return "Fujitsu"
     if ("redhat" in email):
@@ -204,7 +204,6 @@ def getOrganizationFromCommit(commit):
     return False
 
 def writeCommitsByOrganization(repo, startDatetime, outputFilename, sourceCorePathFilter):
-    minimumCommits = 50
     unknownOrganization = "Other"
 
     commits = getCommitsSince(repo, startDatetime, sourceCorePathFilter)
@@ -217,12 +216,6 @@ def writeCommitsByOrganization(repo, startDatetime, outputFilename, sourceCorePa
             commitsByOrganization[organization] = 1
         else:
             commitsByOrganization[organization] = commitsByOrganization[organization] + 1
-
-    # Strip out low-commit organizations to make the vis cleaner
-    for organization in commitsByOrganization:
-        if (commitsByOrganization[organization] < minimumCommits):
-            commitsByOrganization[unknownOrganization] = commitsByOrganization[unknownOrganization] + commitsByOrganization[organization]
-            commitsByOrganization[organization] = 0
 
     commitsByOrganizationFile = open(outputFilename, "w")
     commitsByOrganizationFile.write("Organization,commits\n")
@@ -356,13 +349,13 @@ def main():
     languageList = ["Total", "Comments", "Perl", "IDL", "C/C++ Header", "Assembly"
                     ,"Objective C", "Python", "Objective C++", "Javascript", "C", "C++"]
     samples = 300 # number of times to count lines of code
-    writeLinesOfCode(blinkDir, blinkRepo, samples, startDatetime, cloc, outputDir + "blinkLinesOfCode.csv", languageList, sourceCorePathFilter)
-    writeLinesOfCode(webkitDir, webkitRepo, samples, startDatetime, cloc, outputDir + "webkitLinesOfCode.csv", languageList, sourceCorePathFilter)
+    #writeLinesOfCode(blinkDir, blinkRepo, samples, startDatetime, cloc, outputDir + "blinkLinesOfCode.csv", languageList, sourceCorePathFilter)
+    #writeLinesOfCode(webkitDir, webkitRepo, samples, startDatetime, cloc, outputDir + "webkitLinesOfCode.csv", languageList, sourceCorePathFilter)
     print "  done!"
 
     print "Computing commits by organization..."
-    #writeCommitsByOrganization(blinkRepo, forkDatetime, outputDir + "blinkCommitsByOrganization.csv", sourceCorePathFilter)
-    #writeCommitsByOrganization(webkitRepo, forkDatetime, outputDir + "webkitCommitsByOrganization.csv", sourceCorePathFilter)
+    writeCommitsByOrganization(blinkRepo, forkDatetime, outputDir + "blinkCommitsByOrganization.csv", sourceCorePathFilter)
+    writeCommitsByOrganization(webkitRepo, forkDatetime, outputDir + "webkitCommitsByOrganization.csv", sourceCorePathFilter)
     print "  done! Wrote {blink,webkit}CommitsByOrganization.csv"
 
     print "Computing commits per day moving averages..."
@@ -377,8 +370,8 @@ def main():
     print "Computing top files..."
     topFileCount = 500
     topFileExtensionFilter = [".h", ".cpp", ".c", ".idl", ".mm"]
-    writeTopFiles(blinkRepo, forkDatetime, topFileCount, outputDir + "blinkTopFiles.csv", topFileExtensionFilter, sourceCorePathFilter)
-    writeTopFiles(webkitRepo, forkDatetime, topFileCount, outputDir + "webkitTopFiles.csv", topFileExtensionFilter, sourceCorePathFilter)
+    #writeTopFiles(blinkRepo, forkDatetime, topFileCount, outputDir + "blinkTopFiles.csv", topFileExtensionFilter, sourceCorePathFilter)
+    #writeTopFiles(webkitRepo, forkDatetime, topFileCount, outputDir + "webkitTopFiles.csv", topFileExtensionFilter, sourceCorePathFilter)
     print "  done!"
 
 if __name__ == '__main__':

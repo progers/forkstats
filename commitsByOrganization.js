@@ -2,6 +2,8 @@ function showCommitsByOrganization() {
   var blinkData = undefined;
   var webkitData = undefined;
   var organizations = [];
+  // Make the vis cleaner by stripping out smaller contributors.
+  var minimumContributions = 45;
 
   d3.csv("data/blinkCommitsByOrganization.csv", function(error, data) {
     blinkData = data;
@@ -30,8 +32,12 @@ function showCommitsByOrganization() {
     var data = [];
     var i = 0;
     for (organization in organizations) {
-      data[i] = {Blink: organizations[organization].blinkCommits, Webkit: organizations[organization].webkitCommits, Organization: organization};
-      i = i + 1;
+      var blinkCommits = organizations[organization].blinkCommits;
+      var webkitCommits = organizations[organization].webkitCommits;
+      if (blinkCommits + webkitCommits > minimumContributions) {
+        data[i] = {Blink: blinkCommits, Webkit: webkitCommits, Organization: organization};
+        i = i + 1;
+      }
     }
     // Gives a decent looking sort with Google on the left and Apple on the right.
     data.sort(function(a, b) { return (a.Webkit + 2*b.Blink) - (b.Webkit + 2*a.Blink);});

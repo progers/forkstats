@@ -140,7 +140,7 @@
   </table>
 </div>
 
-<p>In 2013 the <a href="http://en.wikipedia.org/wiki/Browser_wars">browser wars</a> sprouted a new rendering engine: Blink. When Blink forked in April 2013, Webkit had 1.8 million lines of C++, <a href="https://www.ohloh.net/p/WebKit">2,500</a> commits per month and was the most popular browser engine. On mobile, Webkit backed the top 3 browsers (Apple Safari, Google Chrome, Android Browser), accounting for the majority of mobile browsers. This post is a look at the Blink/Webkit fork one year later: how have the projects diverged, who is driving them, and where are they headed?</p>
+<p>In 2013 the <a href="http://en.wikipedia.org/wiki/Browser_wars">browser wars</a> sprouted a new rendering engine: Blink. When Blink forked in April 2013, Webkit had a total of 1.8 million lines of C++, <a href="https://www.ohloh.net/p/WebKit">2,500</a> commits per month and was the most popular browser engine. On mobile, Webkit backed the top 3 browsers (Apple Safari, Google Chrome, Android Browser), accounting for the majority of mobile eyeballs. This post is a look at the Blink/Webkit fork one year later: how have the projects diverged, who is driving them, and what are they up to?</p>
 
 <h2>What is a browser engine?</h2>
 <p>Both WebKit and Blink are more than just browser engines--for example Webkit contains a first-class javascript engine (JSC) and two application layers (Webkit1, Webkit2) which are not in Blink. For this discussion, the "core" engine code is the common code shared by Blink and Webkit such as <a href="http://trac.webkit.org/browser/trunk/Source/WebCore/">Source/WebCore</a> and <a href="https://code.google.com/p/chromium/codesearch#chromium/src/third_party/WebKit/Source/wtf/">Source/WTF</a>. This core code is what positions and draws the text you're reading now.</p>
@@ -170,14 +170,6 @@ The graph below shows the top core files modified in each project. The change co
 <div id="topFiles" class="graph"></div><br>
 </p>
 
-<h2>De-fork WebKit?</h2>
-<p>
-To web developers, the two projects are still remarkably similar due to merges of bugfixes between the projects--that won't last. Blink's <a href="http://www.chromium.org/blink/blink-gc">Oilpan</a> project will switch Blink from from reference counting to garbage collecting C++ objects. Merges from WebKit to Blink will be difficult without introducing security bugs and the projects will start diverging much faster. Blink has over twice the number of developers and WebKit will fall behind without more.
-</p>
-<p>
-The web loses by having four major browser engines: effort is duplicated, compatibility is reduced. Competition is a cornerstone of the web and it will continue in a de-forked world: WWDC'14 will show Safari innovating in many areas (JavaScriptCore in particular) but text layout doesn't sell devices. Who wouldn't want to see the multiple script engine support added to Blink for Dart being used for a second JS engine? It's a <a href="http://en.wikipedia.org/wiki/Series_of_tubes">pipe dream</a> but it would be best for the web.
-</p>
-<p>
 
 </p>
 <br/>

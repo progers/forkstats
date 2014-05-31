@@ -180,7 +180,7 @@ def getOrganizationFromCommit(commit):
     if ("openbossa" in email):
         return "Openbossa"
     if ("szeged" in email or "reni" in email):
-        return "U.Szeged"
+        return "Szeged"
     if ("company100" in email):
         return "company100"
     if ("fred.wang" in email):

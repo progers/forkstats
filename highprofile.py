@@ -1,7 +1,6 @@
 #!/usr/bin/python
 #
-# Highprofile fork stats
-# pdr@google.com
+# Highprofile fork stats: browserg.nom.es
 
 from git import *
 import datetime
@@ -104,6 +103,7 @@ def writeCommitsMovingAverage(blinkRepo, webkitRepo, startDatetime, window, outp
         webkitMovingAverage = webkitTotal / (window * (window + 1) / 2)
         commitsMovingAverageFile.write(date + "," + str(blinkMovingAverage) + "," + str(webkitMovingAverage) + "\n")
 
+
 def writeCommitsMovingAverageByOrganization(blinkRepo, webkitRepo, startDatetime, window, outputFilename, organizations, sourceCorePathFilter):
     startDatetime = startDatetime - datetime.timedelta(days=(2 * window - 1))
     organizationBlinkCommitsByDay = {}
@@ -203,6 +203,7 @@ def getOrganizationFromCommit(commit):
         return "Apple"
     return False
 
+
 def writeCommitsByOrganization(repo, startDatetime, outputFilename, sourceCorePathFilter):
     unknownOrganization = "Other"
 
@@ -226,6 +227,7 @@ def writeCommitsByOrganization(repo, startDatetime, outputFilename, sourceCorePa
         commitsByOrganizationFile.write(",")
         commitsByOrganizationFile.write(str(commitsByOrganization[organization]))
         commitsByOrganizationFile.write("\n")
+
 
 def getLinesOfCodeByLanguage(dir, cloc, languageList, sourceCorePathFilter):
     paths = []
@@ -335,22 +337,21 @@ def main():
                            ,"Source/modules", "Source/heap", "Source/core", "Source/bindings"
                            ,"Source/WebCore", "Source/bmalloc"] # "Source/WebKit", "Source/WebKit2",
 
-
     print "Computing commits by day..."
-    #writeCommitsByDay(blinkRepo, webkitRepo, startDatetime, outputDir + "commitsByDay.csv", sourceCorePathFilter)
+    writeCommitsByDay(blinkRepo, webkitRepo, startDatetime, outputDir + "commitsByDay.csv", sourceCorePathFilter)
     print "  done!"
 
     print "Computing commits per month..."
     commitByMonthStartDatetime = datetime.datetime(2011, 11, 1)
-    #writeCommitsByMonthAppleGoogle(blinkRepo, webkitRepo, commitByMonthStartDatetime, outputDir + "commitsByMonthAppleGoogle.csv", sourceCorePathFilter)
+    writeCommitsByMonthAppleGoogle(blinkRepo, webkitRepo, commitByMonthStartDatetime, outputDir + "commitsByMonthAppleGoogle.csv", sourceCorePathFilter)
     print "  done!"
 
     print "Counting lines of code"
     languageList = ["Total", "Comments", "Perl", "IDL", "C/C++ Header", "Assembly"
                     ,"Objective C", "Python", "Objective C++", "Javascript", "C", "C++"]
     samples = 300 # number of times to count lines of code
-    #writeLinesOfCode(blinkDir, blinkRepo, samples, startDatetime, cloc, outputDir + "blinkLinesOfCode.csv", languageList, sourceCorePathFilter)
-    #writeLinesOfCode(webkitDir, webkitRepo, samples, startDatetime, cloc, outputDir + "webkitLinesOfCode.csv", languageList, sourceCorePathFilter)
+    writeLinesOfCode(blinkDir, blinkRepo, samples, startDatetime, cloc, outputDir + "blinkLinesOfCode.csv", languageList, sourceCorePathFilter)
+    writeLinesOfCode(webkitDir, webkitRepo, samples, startDatetime, cloc, outputDir + "webkitLinesOfCode.csv", languageList, sourceCorePathFilter)
     print "  done!"
 
     print "Computing commits by organization..."
@@ -358,20 +359,11 @@ def main():
     writeCommitsByOrganization(webkitRepo, forkDatetime, outputDir + "webkitCommitsByOrganization.csv", sourceCorePathFilter)
     print "  done! Wrote {blink,webkit}CommitsByOrganization.csv"
 
-    print "Computing commits per day moving averages..."
-    #averagingWindow = 1 # days
-    #organizationFilter = ["Google", "Apple", "Samsung", "Opera"]
-    #writeCommitsMovingAverage(blinkRepo, webkitRepo, startDatetime, averagingWindow,
-    #    outputDir + "averageCommitsByDay.csv", sourceCorePathFilter)
-    #writeCommitsMovingAverageByOrganization(blinkRepo, webkitRepo, startDatetime, averagingWindow,
-    #    outputDir + "averageCommitsByDayByOrganization.csv", organizationFilter, sourceCorePathFilter)
-    #print "  done!"
-
     print "Computing top files..."
     topFileCount = 500
     topFileExtensionFilter = [".h", ".cpp", ".c", ".idl", ".mm"]
-    #writeTopFiles(blinkRepo, forkDatetime, topFileCount, outputDir + "blinkTopFiles.csv", topFileExtensionFilter, sourceCorePathFilter)
-    #writeTopFiles(webkitRepo, forkDatetime, topFileCount, outputDir + "webkitTopFiles.csv", topFileExtensionFilter, sourceCorePathFilter)
+    writeTopFiles(blinkRepo, forkDatetime, topFileCount, outputDir + "blinkTopFiles.csv", topFileExtensionFilter, sourceCorePathFilter)
+    writeTopFiles(webkitRepo, forkDatetime, topFileCount, outputDir + "webkitTopFiles.csv", topFileExtensionFilter, sourceCorePathFilter)
     print "  done!"
 
 if __name__ == '__main__':
